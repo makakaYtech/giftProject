@@ -10,11 +10,20 @@
   </style>
 
   <style TYPE="text/css">
-    #board TD {width: 15pt; height: 15pt; font-size: 2pt; border-color: red;}
+    #board TD {width: 30pt; height: 30pt; font-size: 2pt; border-color: red;}
     TD.foot {font-size: 10pt;}
-    #board TD.start {font-size: 8pt; border-left: 2px black solid; background:yellowgreen; border-top: 2px black solid;text-align: center; color: red}
-    #board TD.end {font-size: 8pt; text-align: center; color: green}
+    #board TD.start {font-size: 14pt; border-left: 2px black solid; background:yellowgreen; border-top: 2px black solid;text-align: center; color: red}
+    #board TD.end {font-size: 14pt; text-align: center; color: green}
     #message { font-size:2rem; margin: 30pt; padding: 0pt; text-align: red}
+  </style>
+
+  <style>
+    button {
+      height: 50px;
+      width: 50px;
+      font-size: 36px;
+      margin: 10px;
+    }
   </style>
 
 </head>
@@ -75,6 +84,60 @@
       return true
     }
 
+    function moveItBtn(key) {
+      console.log('aa', event)
+      if (!progress) return
+      switch (key) {
+    case 37: // left
+      if (labirint[start.rows][1][start.cols-1]==0) {
+    if (testNext(board.rows[start.rows].cells[start.cols-1]))
+      message.innerText=""
+    start.cols--
+    document.all.board.rows[start.rows].cells[start.cols].style.backgroundColor="yellow"
+      } else
+      message.innerText=""
+
+      break;
+    case 38: // up
+      if (labirint[start.rows][0][start.cols]==0) {
+    if (testNext(board.rows[start.rows-1].cells[start.cols]))
+      message.innerText=""
+    start.rows--
+    document.all.board.rows[start.rows].cells[start.cols].style.backgroundColor="yellow"
+      } else
+      message.innerText=""
+
+      break;
+    case 39: // right
+      
+      if (labirint[start.rows][1][start.cols]==0) {
+    if (testNext(board.rows[start.rows].cells[start.cols+1]))
+      message.innerText=""
+    start.cols++
+    document.all.board.rows[start.rows].cells[start.cols].style.backgroundColor="yellow"
+      }
+      else
+      message.innerText=""
+
+      break;
+    case 40: //down
+      if (labirint[start.rows+1]==null) return
+      if (labirint[start.rows+1][0][start.cols]==0) {
+    if (testNext(board.rows[start.rows+1].cells[start.cols]))
+      message.innerText=""
+    start.rows++
+    document.all.board.rows[start.rows].cells[start.cols].style.backgroundColor="yellow"
+      } else
+      message.innerText=""
+
+      break;
+      }
+      if (document.all.board.rows[start.rows].cells[start.cols].innerText=="end") {
+    message.innerText='С праздником, мамы! Мы вас любим !❤️'
+    progress=false
+      }
+    }
+
     function moveIt() {
       if (!progress) return
       switch (event.keyCode) {
@@ -131,40 +194,50 @@
 
   </script>
 
-  <div align="center"></div><br>
-  <p><table id="board" align="center" cellspacing="0" cellpadding="0" bgcolor="#ffffcc">
-    <script>
-  for (var row = 0; row<labirint.length; row++) {
-    document.write("<TR>") 
+      <div align="center"></div><br>
+      <p><table id="board" align="center" cellspacing="0" cellpadding="0" bgcolor="#ffffcc">
+        <script>
+      for (var row = 0; row<labirint.length; row++) {
+        document.write("<TR>") 
 
-    for (var col = 0; col<labirint[row][0].length; col++) {
-  document.write("<TD STYLE='")
-  for (var cell = 0; cell<2; cell++) {
-    if (labirint[row][cell][col]==1) 
-  document.write(sides[cell]+": 2px black solid;")
-  }
-  if ((0==col) && (0!=row))
-    document.write("border-left: 2px black solid;")
-  if (row==labirint.length-1)
-    document.write("border-bottom: 2px black solid;")
-  if ((0==row) && (0==col)) 
-    document.write(" background-color:yellow;' class=start>start</TD>")
-  else
-  if ((row==labirint.length-1) && (col==labirint[row][0].length-1))
-    document.write("' class=end>end</TD>")
-  else
-    document.write("'> </TD>")
-    }
-    document.write("</TR>")
-  }
-  var start = new Object
-  start.rows = 0
-  start.cols = 0
-  progress=true
-  document.onkeydown = moveIt;
+        for (var col = 0; col<labirint[row][0].length; col++) {
+      document.write("<TD STYLE='")
+      for (var cell = 0; cell<2; cell++) {
+        if (labirint[row][cell][col]==1) 
+      document.write(sides[cell]+": 2px black solid;")
+      }
+      if ((0==col) && (0!=row))
+        document.write("border-left: 2px black solid;")
+      if (row==labirint.length-1)
+        document.write("border-bottom: 2px black solid;")
+      if ((0==row) && (0==col)) 
+        document.write(" background-color:yellow;' class=start>start</TD>")
+      else
+      if ((row==labirint.length-1) && (col==labirint[row][0].length-1))
+        document.write("' class=end>end</TD>")
+      else
+        document.write("'> </TD>")
+        }
+        document.write("</TR>")
+      }
+      var start = new Object
+      start.rows = 0
+      start.cols = 0
+      progress=true
+      document.onkeydown = moveIt;
     </script>
     </table>
     <p id="message"> </p></p>
+    <div style="margin:auto;text-align: center;">
+      <div>
+        <button onclick="moveItBtn(38)">&#8593</button>
+      </div>
+      <div>
+        <button onclick="moveItBtn(37)">&#8592</button>
+        <button onclick="moveItBtn(40)">&#8595</button>
+        <button onclick="moveItBtn(39)">&#8594</button>
+      </div>
+    </div>
 
 </body>
 </html>
